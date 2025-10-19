@@ -4,13 +4,37 @@ import { PostCard } from "@/components/post-card";
 
 type SP = { [key: string]: string | string[] | undefined };
 
-export default async function Home({ searchParams }: { searchParams: Promise<SP> }) {
-  const sp = await searchParams;
+const resolveSearchParams = async (searchParams?: Promise<SP> | SP) => {
+  if (!searchParams) return {} satisfies SP;
+  const maybePromise = searchParams as PromiseLike<SP>;
+  if (typeof maybePromise.then === "function") return await maybePromise;
+  return searchParams;
+};
 
-  const selected = new Set(String(sp.tags ?? "").split(",").filter(Boolean));
+const parseTags = (input?: string | string[]) => {
+  if (!input) return new Set<string>();
+  const values = Array.isArray(input) ? input : [input];
+  return new Set(
+    values
+      .flatMap(value => value.split(","))
+      .map(tag => tag.trim())
+      .filter(Boolean),
+  );
+};
+
+const parsePage = (input: string | string[] | undefined) => {
+  const value = Array.isArray(input) ? input[0] : input;
+  const parsed = Number.parseInt(value ?? "1", 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
+};
+
+export default async function Home({ searchParams }: { searchParams?: Promise<SP> | SP }) {
+  const sp = await resolveSearchParams(searchParams);
+
+  const selected = parseTags(sp.tags);
   const filtered = allPosts.filter(p => [...selected].every(t => p.tags.includes(t)));
 
-  const page = Number(sp.page ?? 1);
+  const page = parsePage(sp.page);
   const pageSize = 10;
   const items = filtered.slice((page - 1) * pageSize, page * pageSize);
 
