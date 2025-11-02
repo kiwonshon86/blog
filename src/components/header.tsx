@@ -38,8 +38,6 @@ export default function Header() {
   const pages = useMemo(
     () => [
       { href: "/", label: "홈으로", icon: HomeIcon },
-      { href: "/tags", label: "태그 전체", icon: HashIcon },
-      { href: "/search", label: "검색 페이지", icon: SearchIcon },
     ],
     [],
   );
@@ -66,15 +64,6 @@ export default function Header() {
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
         <Link href="/" className="font-semibold">My Blog</Link>
 
-        <nav className="hidden md:block">
-          <NavigationMenu>
-            <NavigationMenuList>
-              <NavigationMenuItem><Link href="/tags">Tags</Link></NavigationMenuItem>
-              <NavigationMenuItem><Link href="/search">Search</Link></NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
-        </nav>
-
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
@@ -88,8 +77,6 @@ export default function Header() {
             <SheetContent side="left">
               <div className="mt-6 flex flex-col gap-4">
                 <Link href="/">Home</Link>
-                <Link href="/tags">Tags</Link>
-                <Link href="/search">Search</Link>
               </div>
             </SheetContent>
           </Sheet>

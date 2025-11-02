@@ -32,7 +32,7 @@ export default async function Home({ searchParams }: { searchParams?: Promise<SP
   const sp = await resolveSearchParams(searchParams);
 
   const selected = parseTags(sp.tags);
-  const filtered = allPosts.filter(p => [...selected].every(t => p.tags.includes(t)));
+  const filtered = [...selected].length === 0 ? allPosts : allPosts.filter(p => [...selected].some(t => p.tags.includes(t)));
 
   const page = parsePage(sp.page);
   const pageSize = 10;
@@ -40,11 +40,6 @@ export default async function Home({ searchParams }: { searchParams?: Promise<SP
 
   return (
     <div className="space-y-6">
-      {/* ✅ 디버그 라인 (임시) */}
-      <div className="text-xs text-muted-foreground">
-        total: {allPosts.length} / filtered: {filtered.length} / pageItems: {items.length}
-      </div>
-
       <TagFilter all={getAllTags()} />
 
       {items.length === 0 ? (
