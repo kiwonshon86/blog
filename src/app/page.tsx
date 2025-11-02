@@ -4,23 +4,42 @@ import { PostCard } from "@/components/post-card";
 
 type SP = { [key: string]: string | string[] | undefined };
 
-export default async function Home({ searchParams }: { searchParams: Promise<SP> }) {
-  const sp = await searchParams;
+const resolveSearchParams = async (searchParams?: Promise<SP> | SP) => {
+  if (!searchParams) return {} satisfies SP;
+  const maybePromise = searchParams as PromiseLike<SP>;
+  if (typeof maybePromise.then === "function") return await maybePromise;
+  return searchParams;
+};
 
-  const selected = new Set(String(sp.tags ?? "").split(",").filter(Boolean));
-  const filtered = allPosts.filter(p => [...selected].every(t => p.tags.includes(t)));
+const parseTags = (input?: string | string[]) => {
+  if (!input) return new Set<string>();
+  const values = Array.isArray(input) ? input : [input];
+  return new Set(
+    values
+      .flatMap(value => value.split(","))
+      .map(tag => tag.trim())
+      .filter(Boolean),
+  );
+};
 
-  const page = Number(sp.page ?? 1);
+const parsePage = (input: string | string[] | undefined) => {
+  const value = Array.isArray(input) ? input[0] : input;
+  const parsed = Number.parseInt(value ?? "1", 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
+};
+
+export default async function Home({ searchParams }: { searchParams?: Promise<SP> | SP }) {
+  const sp = await resolveSearchParams(searchParams);
+
+  const selected = parseTags(sp.tags);
+  const filtered = [...selected].length === 0 ? allPosts : allPosts.filter(p => [...selected].some(t => p.tags.includes(t)));
+
+  const page = parsePage(sp.page);
   const pageSize = 10;
   const items = filtered.slice((page - 1) * pageSize, page * pageSize);
 
   return (
     <div className="space-y-6">
-      {/* ✅ 디버그 라인 (임시) */}
-      <div className="text-xs text-muted-foreground">
-        total: {allPosts.length} / filtered: {filtered.length} / pageItems: {items.length}
-      </div>
-
       <TagFilter all={getAllTags()} />
 
       {items.length === 0 ? (
