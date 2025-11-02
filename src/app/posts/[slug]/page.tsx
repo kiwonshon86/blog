@@ -5,6 +5,8 @@ import { MDXContent } from "@/components/mdx/MDXContent";
 import { MDXComponents } from "@/components/mdx/MDXComponents";
 import Toc from "@/components/toc";
 import { Separator } from "@/components/ui/separator";
+import GiscusComments from "@/components/comments/GiscusComments";
+import { getGiscusConfig } from "@/lib/giscus";
 
 type Params = { slug: string };
 
@@ -16,6 +18,7 @@ export default async function PostPage({
   const { slug } = await params; // ✅ 반드시 await
   const post = getPostBySlug(slug);
   if (!post) return notFound();
+  const giscusConfig = getGiscusConfig();
 
   return (
     <article className="prose dark:prose-invert">
@@ -34,7 +37,9 @@ export default async function PostPage({
       </div>
 
       <Separator className="my-10" />
-      {/* Giscus … */}
+      {giscusConfig ? (
+        <GiscusComments config={giscusConfig} slug={slug} />
+      ) : null}
     </article>
   );
 }
