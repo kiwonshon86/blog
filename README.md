@@ -62,6 +62,12 @@ Next.js 15, React 19, Tailwind CSS 4로 구축된 개인 블로그 템플릿입�
 
 ## 환경 변수
 - `NEXT_PUBLIC_SITE_URL`: RSS, 사이트맵, 구조화 데이터에서 사용하는 기본 도메인. 설정하지 않으면 `http://localhost:3000`을 기본값으로 사용합니다.
+- Giscus 댓글(선택):
+  - `NEXT_PUBLIC_GISCUS_REPO`: `owner/repo` 형식의 깃허브 저장소 경로.
+  - `NEXT_PUBLIC_GISCUS_REPO_ID`: Giscus 설치 시 발급되는 저장소 ID.
+  - `NEXT_PUBLIC_GISCUS_CATEGORY`: 사용할 Discussions 카테고리 이름.
+  - `NEXT_PUBLIC_GISCUS_CATEGORY_ID`: Discussions 카테고리 ID.
+  - 필요 시 `NEXT_PUBLIC_GISCUS_THEME`, `NEXT_PUBLIC_GISCUS_LANG` 등 [Giscus 환경 변수](https://github.com/giscus/giscus/blob/main/ADVANCED-USAGE.md#environment-variables)도 덮어쓸 수 있습니다. 필수 값이 비어 있으면 댓글 영역은 렌더링되지 않습니다.
 
 ## 배포
 빌드 아티팩트는 Next.js 표준 방식과 동일합니다. 정적 콘텐츠는 Velite가 빌드 시점에 생성하므로, 배포 전에 `bunx velite && bun run build` 순으로 실행해 최신 콘텐츠를 포함시켜 주세요.
