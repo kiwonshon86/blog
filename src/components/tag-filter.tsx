@@ -42,7 +42,7 @@ export default function TagFilter({ all }: { all: [string, number][] }) {
             key={tag}
             asChild
             variant={isSelected ? "default" : "outline"}
-            className={pending ? "opacity-70" : undefined}
+            className={pending ? "opacity-70 cursor-pointer" : "cursor-pointer"}
           >
             <button
               type="button"

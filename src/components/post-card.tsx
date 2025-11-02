@@ -8,7 +8,7 @@ export function PostCard({ p }: { p: { slug: string; title: string; description?
 
   return (
     <Card>
-      <CardContent className="p-6">
+      <CardContent className="px-6">
         <h3 className="text-xl font-semibold"><Link href={href}>{p.title}</Link></h3>
         <p className="text-sm text-muted-foreground">{isNaN(+d) ? "" : d.toLocaleDateString()}</p>
         {p.description && <p className="mt-2">{p.description}</p>}
